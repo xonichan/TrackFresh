@@ -1,6 +1,6 @@
 # Модель данных TrackFresh (PostgreSQL)
 
-Источник истины — миграция [`migrations/0001_init_data_model.sql`](../migrations/0001_init_data_model.sql).
+Источник истины — миграции [`migrations/0001_init_data_model.sql`](../migrations/0001_init_data_model.sql) и [`migrations/0002_add_firebase_uid.sql`](../migrations/0002_add_firebase_uid.sql).
 Проверено на `192.168.3.69`, база `mydb`, PostgreSQL 16.15, роль `trackfresh`.
 
 ```
@@ -17,6 +17,7 @@ users 1 ──── 1 user_settings
 | id | uuid | NO | `gen_random_uuid()` |
 | email | text | YES | — (UNIQUE) |
 | created_at | timestamptz | NO | `now()` |
+| firebase_uid | text | NO | — (UNIQUE) |
 
 ### products
 
@@ -40,11 +41,19 @@ users 1 ──── 1 user_settings
 | notify_time | time without time zone | NO | `'09:00:00'` |
 | warn_days | integer | NO | `3` |
 
+## Связь с Firebase Authentication
+
+- `users.firebase_uid` хранит идентификатор Firebase (строка, обычно 28 символов).
+- Firebase UID не является UUID, поэтому хранится отдельным текстовым полем; `users.id` остаётся суррогатным UUID.
+- Уникальность `firebase_uid` гарантирует однозначное соответствие «учётная запись Firebase → профиль».
+- Поиск профиля по `firebase_uid` возвращает одну строку; только после этого устанавливается `app.user_id` (равный `users.id`).
+
 ## Ограничения целостности
 
 | Ограничение | Правило |
 |---|---|
 | `users_email_key` | `email` уникален |
+| `users_firebase_uid_key` | `firebase_uid` уникален |
 | `products_category_chk` | `category IN ('food','medicine')` |
 | `products_dates_order_chk` | `production_date IS NULL OR production_date <= expiry_date` |
 | `user_settings_warn_days_chk` | `warn_days >= 0` |
@@ -82,5 +91,5 @@ SET app.user_id = '<uuid пользователя>';
 ## Открытые вопросы
 
 - Инструмент миграций (raw SQL / Flyway / Prisma и т. п.) — определяется вместе с API-слоем.
-- Способ передачи идентичности в `app.user_id` (`SET` vs роль) — зависит от изменения о подключении.
+- Как API получает Firebase-токен и превращает его в `users.id` (резолв по `firebase_uid`, кэш) — зависит от изменения о подключении.
 - Хранение часового пояса для `notify_time` — вне текущей схемы.

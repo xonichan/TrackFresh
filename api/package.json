@@ -1,0 +1,24 @@
+{
+  "name": "trackfresh-api",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "HTTP API для доступа мобильного приложения TrackFresh к PostgreSQL",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test": "node --import tsx --test test/*.test.ts"
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "firebase-admin": "^14.5.0",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.5",
+    "@types/pg": "^8.23.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(set *)",
-      "Bash(node *)"
+      "Bash(node *)",
+      "Bash(openspec *)",
+      "Bash(findstr *)",
+      "Bash(npm run *)",
+      "Bash(npx *)",
+      "Bash(npm test)",
+      "Bash(powershell *)"
     ]
   },
   "$version": 3

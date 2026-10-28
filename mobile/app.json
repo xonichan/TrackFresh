@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "TrackFresh",
+    "slug": "trackfresh",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "app.trackfresh",
+      "googleServicesFile": "./google-services.json",
+      "permissions": ["CAMERA", "POST_NOTIFICATIONS"],
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-dev-client",
+      "expo-notifications",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "TrackFresh использует камеру, чтобы прочитать срок годности на упаковке.",
+          "photosPermission": "TrackFresh открывает галерею, чтобы прочитать срок годности с фотографии."
+        }
+      ],
+      [
+        "@react-native-firebase/app",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "apiBaseUrl": "http://192.168.3.69:3000"
+    }
+  }
+}
