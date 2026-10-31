@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import type { NotifyFrequency } from '../api/types';
+import { useAuth } from '../state/AuthContext';
 import { useData } from '../state/DataContext';
+import { remindersAvailable } from '../lib/notifications';
 
 const FREQUENCIES: { key: NotifyFrequency; label: string }[] = [
   { key: 'daily', label: 'Ежедневно' },
@@ -13,6 +15,7 @@ const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 export function SettingsScreen() {
   const { settings, saveSettings, notificationsDenied, error } = useData();
+  const { signOut, user } = useAuth();
   const [frequency, setFrequency] = useState<NotifyFrequency>(settings.notify_frequency);
   const [time, setTime] = useState(settings.notify_time);
   const [warnDays, setWarnDays] = useState(String(settings.warn_days));
@@ -82,14 +85,28 @@ export function SettingsScreen() {
       ))}
       {error ? <Text style={styles.problem}>{error}</Text> : null}
       {saved ? <Text style={styles.saved}>Настройки сохранены.</Text> : null}
-      {notificationsDenied ? (
+      {remindersAvailable ? (
+        <>
+          {notificationsDenied ? (
+            <Text style={styles.hint}>
+              Уведомления запрещены в системе — напоминания приходить не будут.
+            </Text>
+          ) : null}
+          <Text style={styles.hint}>
+            Период предупреждения влияет и на цвет продуктов в списке.
+          </Text>
+        </>
+      ) : (
         <Text style={styles.hint}>
-          Уведомления запрещены в системе — напоминания приходить не будут.
+          Здесь напоминания не приходят — они работают в приложении на телефоне.
+          Период предупреждения по-прежнему влияет на цвет продуктов в списке.
         </Text>
-      ) : null}
-      <Text style={styles.hint}>
-        Период предупреждения влияет и на цвет продуктов в списке.
-      </Text>
+      )}
+
+      <Text style={styles.account}>{user ? `Вход: ${user.uid.slice(0, 8)}…` : ''}</Text>
+      <Pressable style={styles.logout} onPress={() => void signOut()}>
+        <Text style={styles.buttonText}>Выйти</Text>
+      </Pressable>
     </ScrollView>
   );
 }
@@ -126,4 +143,12 @@ const styles = StyleSheet.create({
   problem: { color: '#c62828', marginTop: 6 },
   saved: { color: '#2e7d32', marginTop: 6 },
   hint: { color: '#666', marginTop: 12 },
+  account: { color: '#666', marginTop: 32 },
+  logout: {
+    backgroundColor: '#c62828',
+    borderRadius: 8,
+    padding: 14,
+    alignItems: 'center',
+    marginTop: 8,
+  },
 });

@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+
 export type DbConfig = {
   host: string;
   port: number;
@@ -16,6 +18,8 @@ export type Config = {
   port: number;
   db: DbConfig;
   firebase: FirebaseConfig;
+  /** Каталог собранной веб-версии. undefined — интерфейс не раздаётся. */
+  webDir?: string;
 };
 
 export class ConfigError extends Error {}
@@ -43,5 +47,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
       clientEmail: required(env, 'FIREBASE_CLIENT_EMAIL'),
       privateKey: required(env, 'FIREBASE_PRIVATE_KEY').replace(/\\n/g, '\n'),
     },
+    // Каталог собирается из mobile/ командой npm run build:web (см. mobile/README.md).
+    webDir: env.WEB_DIR ?? fileURLToPath(new URL('../public', import.meta.url)),
   };
 }

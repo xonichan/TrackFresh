@@ -16,7 +16,7 @@ import {
 export function AddProductScreen() {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const { addProduct, error } = useData();
-  const { scan, busy: scanning } = useLabelScan();
+  const { scan, busy: scanning, available: scanningAvailable } = useLabelScan();
 
   const [values, setValues] = useState<ProductFormValues>(EMPTY_FORM);
   const [notice, setNotice] = useState<string | null>(null);
@@ -58,8 +58,16 @@ export function AddProductScreen() {
         busy={saving || scanning}
         serverError={error}
         onSubmit={() => void onSubmit()}
-        onScan={() => void onScan()}
+        // Сканирования нет там, где оно недоступно: экран не знает про платформу.
+        onScan={scanningAvailable ? () => void onScan() : undefined}
       />
+      {scanningAvailable ? null : (
+        <View style={styles.notice}>
+          <Text style={styles.noticeText}>
+            Здесь сканирование упаковки недоступно — заполните поля вручную.
+          </Text>
+        </View>
+      )}
       {notice ? (
         <View style={styles.notice}>
           <Text style={styles.noticeText}>{notice}</Text>

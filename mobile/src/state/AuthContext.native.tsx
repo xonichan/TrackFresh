@@ -14,24 +14,10 @@ import {
   signInWithCredential,
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
-  type User,
 } from '@react-native-firebase/auth';
 import { GoogleSignin, isSuccessResponse } from '@react-native-google-signin/google-signin';
 import { GOOGLE_WEB_CLIENT_ID } from '../config';
-
-type AuthState = {
-  /** false, пока Firebase не сообщил текущее состояние входа. */
-  ready: boolean;
-  user: User | null;
-  error: string | null;
-  busy: boolean;
-  signIn(email: string, password: string): Promise<void>;
-  signUp(email: string, password: string): Promise<void>;
-  signInWithGoogle(): Promise<void>;
-  signOut(): Promise<void>;
-  /** ID-токен для запросов к API; пустая строка, если пользователь вышел. */
-  getToken(): Promise<string>;
-};
+import type { AuthState } from './auth-types';
 
 const AuthContext = createContext<AuthState | null>(null);
 
@@ -59,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const auth = useMemo(() => getAuth(), []);
 
   const [ready, setReady] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthState['user']>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -71,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     return onAuthStateChanged(auth, (next) => {
-      setUser(next);
+      setUser(next ? { uid: next.uid } : null);
       setReady(true);
     });
   }, [auth]);

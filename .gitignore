@@ -4,6 +4,12 @@ node_modules/
 # Сборка
 dist/
 
+# Собранная веб-версия: её раздаёт API, в репозитории не хранится
+api/public/
+
+# Интерпретатор Python, поставленный install manager'ом — к проекту не относится
+Python/
+
 # Логи
 *.log
 
@@ -12,3 +18,5 @@ dist/
 .env.*
 *.pgpass
 pgpass.txt
+service-account*.json
+*firebase-adminsdk*.json

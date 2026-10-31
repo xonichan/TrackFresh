@@ -13,6 +13,9 @@ const STEPS: Record<NotifyFrequency, number> = {
 const MAX_PER_PRODUCT = 30;
 const MINUTE_MS = 60_000;
 
+/** На телефоне напоминания работают. */
+export const remindersAvailable = true;
+
 export function configureNotifications(): void {
   Notifications.setNotificationHandler({
     handleNotification: async () => ({

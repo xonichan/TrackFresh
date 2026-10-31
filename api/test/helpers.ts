@@ -34,9 +34,9 @@ export type ApiHandle = {
   close: () => Promise<void>;
 };
 
-export async function startApi(): Promise<ApiHandle> {
+export async function startApi(options: { webDir?: string } = {}): Promise<ApiHandle> {
   const pool = testPool();
-  const server = createApp({ verifier: uidVerifier, db: pool }).listen(0);
+  const server = createApp({ verifier: uidVerifier, db: pool, webDir: options.webDir }).listen(0);
   const address = server.address();
   assert.ok(address && typeof address === 'object');
 

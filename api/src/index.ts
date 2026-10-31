@@ -8,7 +8,7 @@ try {
   const db = createPool(config.db);
   const verifier = createFirebaseVerifier(config.firebase);
 
-  createApp({ verifier, db }).listen(config.port, () => {
+  createApp({ verifier, db, webDir: config.webDir }).listen(config.port, () => {
     console.log(`trackfresh-api listening on ${config.port}`);
   });
 } catch (error) {

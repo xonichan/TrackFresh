@@ -44,7 +44,14 @@
       ]
     ],
     "extra": {
-      "apiBaseUrl": "http://192.168.3.69:3000"
+      "apiBaseUrl": "http://192.168.3.69:3000",
+      "googleWebClientId": "",
+      "firebaseWeb": {
+        "apiKey": "",
+        "authDomain": "",
+        "projectId": "",
+        "appId": ""
+      }
     }
   }
 }

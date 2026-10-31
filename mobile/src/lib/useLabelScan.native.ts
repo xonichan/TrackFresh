@@ -1,12 +1,8 @@
 import { useCallback, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import TextRecognition from '@react-native-ml-kit/text-recognition';
-import { parseLabel, type ParsedLabel } from '../lib/ocr-parse';
-
-export type ScanOutcome =
-  | { status: 'recognized'; parsed: ParsedLabel }
-  | { status: 'unrecognized' }
-  | { status: 'cancelled' };
+import { parseLabel } from '../lib/ocr-parse';
+import type { ScanOutcome } from './scan-types';
 
 /**
  * Открывает камеру, распознаёт текст через ML Kit и разбирает название и срок годности.
@@ -43,5 +39,5 @@ export function useLabelScan() {
     }
   }, []);
 
-  return { scan, busy };
+  return { scan, busy, available: true };
 }
